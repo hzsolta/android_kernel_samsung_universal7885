@@ -1210,6 +1210,7 @@ emul:
 				break;
 			case bc1nez_op:
 				MIPS_FPU_EMU_INC_STATS(bc1nez);
+			case bc1nez_op:
 				cond = bit0 != 0;
 				break;
 			}
