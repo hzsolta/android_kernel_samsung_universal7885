@@ -1607,7 +1607,7 @@ struct task_struct {
 	struct llist_node wake_entry;
 	int on_cpu;
 #ifdef CONFIG_THREAD_INFO_IN_TASK
-	unsigned int cpu;       /* current CPU */
+	unsigned int cpu;	/* current CPU */
 #endif
 	unsigned int wakee_flips;
 	unsigned long wakee_flip_decay_ts;
@@ -3111,7 +3111,6 @@ static inline void *task_stack_page(const struct task_struct *task)
 {
 	return task->stack;
 }
-
 #define setup_thread_stack(new,old)	do { } while(0)
 
 static inline unsigned long *end_of_stack(const struct task_struct *task)
