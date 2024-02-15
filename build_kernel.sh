@@ -15,13 +15,20 @@ TELEGRAM_API="https://api.telegram.org/bot${BOT_TOKEN}/sendDocument"
 
 make_defconfig(){
 	make O=out ARCH=arm64 exynos7885-a40_defconfig
+	build_kernel
 }
 
 build_kernel(){
 	make O=out ARCH=arm64 -j$(nproc --all)
+	upload
 }
 
 create_zip(){
+    cd $SRCTREE
+    # Extract version information from Makefile
+    VERSION=$(awk '/^VERSION/ {print $3}' Makefile)
+    PATCHLEVEL=$(awk '/^PATCHLEVEL/ {print $3}' Makefile)
+    SUBLEVEL=$(awk '/^SUBLEVEL/ {print $3}' Makefile)
     COUNT="counter.txt"
     # Check if the number file exists, if not, initialize it with 1
     if [ ! -f "$COUNT" ]; then
@@ -31,7 +38,8 @@ create_zip(){
     CURRENT_NUMBER=$(<"$COUNT")
     NEXT_NUMBER=$((CURRENT_NUMBER + 1))
     echo "$NEXT_NUMBER" > "$COUNT"
-    ZIP_FILENAME="Kernel_A40_${NEXT_NUMBER}.zip"
+    cd $SRCTREE/kernel_zip/anykernel/
+    ZIP_FILENAME="Kernel_A40_${NEXT_NUMBER}_[$VERSION.$PATCHLEVEL.$SUBLEVEL].zip"
     zip -r9 "$ZIP_FILENAME" "$@"
     echo ""
     echo "Zip file created: $ZIP_FILENAME and saved in $SRCTREE/kernel_zip/anykernel/"
@@ -50,5 +58,7 @@ upload(){
     echo ""
     echo "Uploading $SRCTREE/kernel_zip/anykernel/$ZIP_FILENAME to Telegram ..."
     # Upload to Telegram
-    curl -s -F chat_id="${CHAT_ID}" -F document=@"$SRCTREE/kernel_zip/anykernel/${ZIP_FILENAME}" "${TELEGRAM_API}"
+    # curl -s -F chat_id="${CHAT_ID}" -F document=@"$SRCTREE/kernel_zip/anykernel/${ZIP_FILENAME}" "${TELEGRAM_API}"
 }
+
+make_defconfig
