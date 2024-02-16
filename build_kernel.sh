@@ -39,6 +39,7 @@ create_zip(){
     NEXT_NUMBER=$((CURRENT_NUMBER + 1))
     echo "$NEXT_NUMBER" > "$COUNT"
     cd $SRCTREE/kernel_zip/anykernel/
+    sed -i "s/Kernel: .*$/Kernel: $VERSION.$PATCHLEVEL.$SUBLEVEL/g" "version"
     ZIP_FILENAME="Kernel_A40_${NEXT_NUMBER}_[$VERSION.$PATCHLEVEL.$SUBLEVEL].zip"
     zip -r9 "$ZIP_FILENAME" "$@"
     echo ""
