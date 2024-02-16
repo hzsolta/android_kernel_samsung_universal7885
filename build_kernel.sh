@@ -1,5 +1,7 @@
 #!/bin/bash
 # Exports
+export KBUILD_BUILD_USER="Kevios12"
+export KBUILD_BUILD_HOST="ubuntu@kevios12"
 export PLATFORM_VERSION=11
 export ANDROID_MAJOR_VERSION=r
 export ARCH=arm64
